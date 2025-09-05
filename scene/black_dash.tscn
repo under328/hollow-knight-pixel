@@ -1,0 +1,102 @@
+[gd_scene load_steps=13 format=3 uid="uid://ctbxtvnlbi5c7"]
+
+[ext_resource type="Script" uid="uid://bmmba4cjn2f31" path="res://scripts/black_dash.gd" id="1_ri4qm"]
+[ext_resource type="Texture2D" uid="uid://gthqr6wrk06p" path="res://assets/聚集.png" id="2_7mfny"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qlfok"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_rjv7h"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aovl8"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_44jw0"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oe7fs"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(256, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8pj6b"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(320, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gibsq"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(384, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4b7mu"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(448, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nrqh5"]
+atlas = ExtResource("2_7mfny")
+region = Rect2(512, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_boyk6"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": null
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qlfok")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_rjv7h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aovl8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_44jw0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oe7fs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8pj6b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gibsq")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4b7mu")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nrqh5")
+}, {
+"duration": 1.0,
+"texture": null
+}],
+"loop": false,
+"name": &"black_dash",
+"speed": 15.0
+}]
+
+[node name="BlackDash" type="Node2D"]
+script = ExtResource("1_ri4qm")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_boyk6")
+animation = &"black_dash"
+frame = 14
+frame_progress = 1.0

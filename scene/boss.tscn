@@ -1,0 +1,88 @@
+[gd_scene load_steps=13 format=3 uid="uid://b4882k2btag78"]
+
+[ext_resource type="Texture2D" uid="uid://b6cdyo1slecp8" path="res://assets/表弟站立.png" id="1_0v4cj"]
+[ext_resource type="Script" uid="uid://fosg0bj5ygc4" path="res://scripts/boss.gd" id="1_et0im"]
+[ext_resource type="Shader" uid="uid://bn1eumje7p45m" path="res://scripts/boss.gdshader" id="2_nuwfj"]
+[ext_resource type="Script" uid="uid://3iw7ba7mylac" path="res://scripts/hurtbox.gd" id="3_285t0"]
+[ext_resource type="Script" uid="uid://d32jhuvmnrbym" path="res://scripts/hitbox.gd" id="4_fl70q"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_nuwfj"]
+shader = ExtResource("2_nuwfj")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_et0im"]
+atlas = ExtResource("1_0v4cj")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_285t0"]
+atlas = ExtResource("1_0v4cj")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fl70q"]
+atlas = ExtResource("1_0v4cj")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nuwfj"]
+atlas = ExtResource("1_0v4cj")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ot3je"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_et0im")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_285t0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fl70q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nuwfj")
+}],
+"loop": true,
+"name": &"idel",
+"speed": 10.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_tcgrh"]
+
+[node name="Boss" type="CharacterBody2D"]
+collision_layer = 4
+script = ExtResource("1_et0im")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_nuwfj")
+use_parent_material = true
+sprite_frames = SubResource("SpriteFrames_ot3je")
+animation = &"idel"
+autoplay = "idel"
+frame = 3
+frame_progress = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_tcgrh")
+
+[node name="Hurtbox" type="Area2D" parent="."]
+collision_layer = 16
+collision_mask = 2
+script = ExtResource("3_285t0")
+metadata/_custom_type_script = "uid://3iw7ba7mylac"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox"]
+shape = SubResource("CapsuleShape2D_tcgrh")
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("4_fl70q")
+metadata/_custom_type_script = "uid://d32jhuvmnrbym"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hitbox"]
+shape = SubResource("CapsuleShape2D_tcgrh")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.1
+
+[connection signal="area_entered" from="Hurtbox" to="." method="_on_hurtbox_area_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
