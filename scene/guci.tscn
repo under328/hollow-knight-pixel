@@ -1,0 +1,70 @@
+[gd_scene load_steps=10 format=3 uid="uid://cg1t0c2kjvsj1"]
+
+[ext_resource type="Texture2D" uid="uid://df3a1in32weyl" path="res://assets/骨刺.png" id="1_2oa36"]
+[ext_resource type="Script" uid="uid://b2aigun3q33c0" path="res://scripts/guci.gd" id="1_w5nrx"]
+[ext_resource type="Script" uid="uid://d32jhuvmnrbym" path="res://scripts/hitbox.gd" id="2_w5nrx"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_avmit"]
+atlas = ExtResource("1_2oa36")
+region = Rect2(0, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_24opd"]
+atlas = ExtResource("1_2oa36")
+region = Rect2(32, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_gsbox"]
+atlas = ExtResource("1_2oa36")
+region = Rect2(64, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qow8x"]
+atlas = ExtResource("1_2oa36")
+region = Rect2(96, 0, 32, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3qxh2"]
+atlas = ExtResource("1_2oa36")
+region = Rect2(128, 0, 32, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ajpr1"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_avmit")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_24opd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsbox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_gsbox")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qow8x")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3qxh2")
+}],
+"loop": false,
+"name": &"guci",
+"speed": 5.0
+}]
+
+[node name="Guci" type="Node2D"]
+script = ExtResource("1_w5nrx")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_ajpr1")
+animation = &"guci"
+autoplay = "guci"
+frame = 5
+frame_progress = 1.0
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("2_w5nrx")
+metadata/_custom_type_script = "uid://d32jhuvmnrbym"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox"]
+polygon = PackedVector2Array(-8, 64, 8, 64, 10, 61, 7, 25, 3, -27, 2, -41, -2, -41, -3, -27, -7, 25, -10, 61)

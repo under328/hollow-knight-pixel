@@ -1,0 +1,84 @@
+[gd_scene load_steps=11 format=3 uid="uid://bwhg7cmwkgo3v"]
+
+[ext_resource type="Script" uid="uid://pxernrvvfvbx" path="res://scripts/door.gd" id="1_vtj8s"]
+[ext_resource type="Texture2D" uid="uid://cf0ei8ce5anls" path="res://assets/铁门.png" id="2_f4rj3"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ytpji"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(0, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_pl08m"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(16, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_nq8m2"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(32, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fnhyg"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(0, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_wxdhl"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(32, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_a810m"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(48, 0, 16, 48)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_l5mmy"]
+atlas = ExtResource("2_f4rj3")
+region = Rect2(64, 0, 16, 48)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v6fgb"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ytpji")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_pl08m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_nq8m2")
+}],
+"loop": false,
+"name": &"close",
+"speed": 6.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fnhyg")
+}],
+"loop": false,
+"name": &"default",
+"speed": 0.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_wxdhl")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_a810m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_l5mmy")
+}],
+"loop": false,
+"name": &"open",
+"speed": 6.0
+}]
+
+[node name="Door" type="CharacterBody2D"]
+position = Vector2(5, 24)
+collision_mask = 0
+script = ExtResource("1_vtj8s")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_v6fgb")
+animation = &"open"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-5, -24, 4, -24, 4, 24, -5, 24)
+disabled = true

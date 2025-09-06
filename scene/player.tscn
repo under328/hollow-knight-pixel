@@ -391,18 +391,18 @@ animations = [{
 radius = 4.0
 height = 22.0
 
-[node name="Player" type="CharacterBody2D"]
+[node name="Player" type="CharacterBody2D" groups=["player"]]
 collision_layer = 2
 script = ExtResource("1_u7b46")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 unique_name_in_owner = true
 z_index = 5
+texture_filter = 1
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_kk4ol")
-animation = &"hurt"
-frame = 2
-frame_progress = 1.0
+animation = &"idle"
+flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 light_mask = 2

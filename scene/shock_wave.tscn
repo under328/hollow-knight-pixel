@@ -1,0 +1,63 @@
+[gd_scene load_steps=9 format=3 uid="uid://ds3x7utt4sk4g"]
+
+[ext_resource type="Script" uid="uid://c7cc6us2c8020" path="res://scripts/shock_wave.gd" id="1_kh7xn"]
+[ext_resource type="Texture2D" uid="uid://opgorgk2v8nv" path="res://assets/白波本体.png" id="1_ny20d"]
+[ext_resource type="Script" uid="uid://d32jhuvmnrbym" path="res://scripts/hitbox.gd" id="2_kh7xn"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qrywo"]
+atlas = ExtResource("1_ny20d")
+region = Rect2(0, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_w5iy3"]
+atlas = ExtResource("1_ny20d")
+region = Rect2(128, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v4ghc"]
+atlas = ExtResource("1_ny20d")
+region = Rect2(256, 0, 128, 128)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_aa7df"]
+atlas = ExtResource("1_ny20d")
+region = Rect2(384, 0, 128, 128)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6ick8"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qrywo")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_w5iy3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v4ghc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_aa7df")
+}],
+"loop": false,
+"name": &"shock_wave",
+"speed": 10.0
+}]
+
+[node name="ShockWave" type="CharacterBody2D"]
+position = Vector2(0, -15)
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("1_kh7xn")
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-9, -11, 12, -11, 12, 15, -15, 15, -22, 12, -26, 7, -26, -2, -22, -7, -15, -10)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_6ick8")
+animation = &"shock_wave"
+
+[node name="Hitbox" type="Area2D" parent="."]
+collision_layer = 4
+collision_mask = 8
+script = ExtResource("2_kh7xn")
+metadata/_custom_type_script = "uid://d32jhuvmnrbym"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Hitbox"]
+polygon = PackedVector2Array(-9, -11, 12, -11, 12, 15, -15, 15, -22, 12, -26, 7, -26, -2, -22, -7, -15, -10)

@@ -1,18 +1,16 @@
 extends Node2D
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
-@export var has_black_dash = true
+@onready var collision_polygon: CollisionPolygon2D = $Hitbox/CollisionPolygon2D
 
 # Called when the node enters the scene tree for the first time.
+
+
 func _ready() -> void:
-	has_black_dash = true
+	animated_sprite.play("guci")
+	await get_tree().create_timer(1.0).timeout
+	queue_free()
 
-
-func spawn_blackdash() -> void:
-	has_black_dash = false
-	animated_sprite.play("black_dash")
-	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	if !animated_sprite.is_playing():
-		has_black_dash = true
+	pass

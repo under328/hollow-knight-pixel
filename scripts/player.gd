@@ -16,7 +16,7 @@ var currentState = State.NORMAL
 @onready var wudi_timer: Timer = $WudiTimer
 
 const SPEED = 560
-const JUMP_VELOCITY = -980.0
+const JUMP_VELOCITY = -800.0
 var direction := 0.0
 var isStateNew = false
 var can_dash = true
@@ -64,8 +64,7 @@ func turn_direction(direction):
 		attack_up.scale.x = 1
 		attack_down.scale.x = 1
 		
-func update_animation():
-	direction = Input.get_axis("left", "right")
+func update_animation(direction):
 	animated_sprite.offset.x = 0
 	# 更新动画
 	if !is_on_floor():
@@ -78,10 +77,8 @@ func update_animation():
 				animated_sprite.play("jump_down")
 	elif direction != 0:
 		animated_sprite.play("run")
-		velocity.x = direction * SPEED
 	else:
 		animated_sprite.play("idle")
-		velocity.x = move_toward(velocity.x, 0, SPEED)
 	turn_direction(direction)
 	
 func process_normal(delta: float) -> void:
@@ -95,16 +92,17 @@ func process_normal(delta: float) -> void:
 	# Handle jump.
 	if jump_count < 2 and Input.is_action_just_pressed("jump"):
 		if is_on_floor():
-			velocity.x = direction * SPEED
 			velocity.y = JUMP_VELOCITY
-			jump_count = 1
 		else:
-			velocity.x = direction * SPEED
-			velocity.y = JUMP_VELOCITY * 0.8
+			velocity.y = JUMP_VELOCITY
 			jump_count = 2
 		# 短按减速
-	if velocity.y < 0  and !Input.is_action_pressed("jump"):
-		velocity.y +=  -JUMP_VELOCITY / 2
+	if velocity.y < 0  and Input.is_action_just_released("jump"):
+		velocity.y =  JUMP_VELOCITY / 2
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
 	if Input.is_action_just_pressed("dash") and can_dash:
 		can_dash = false
 		call_deferred("change_state", State.DASH)
@@ -114,7 +112,7 @@ func process_normal(delta: float) -> void:
 		call_deferred("change_state", State.ATTACK_UP)
 	if Input.is_action_just_pressed("attack") and Input.get_action_strength("down") and !is_on_floor() and attack_timer.is_stopped():
 		call_deferred("change_state", State.ATTACK_DOWN)
-	update_animation()
+	update_animation(direction)
 
 func process_dash(delta):
 	var has_black_dash = black_dash.has_black_dash
