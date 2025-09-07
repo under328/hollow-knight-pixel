@@ -402,7 +402,6 @@ texture_filter = 1
 position = Vector2(0, -16)
 sprite_frames = SubResource("SpriteFrames_kk4ol")
 animation = &"idle"
-flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 light_mask = 2

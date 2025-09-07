@@ -3,14 +3,8 @@ extends Node2D
 @onready var boss: CharacterBody2D = %Boss
 const GUCI = preload("res://scene/guci.tscn")
 
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	global_position.y = 512
-
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
-	pass
 
 func spawner_guci():
 	for i in range(5):

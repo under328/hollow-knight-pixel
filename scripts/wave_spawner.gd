@@ -3,8 +3,6 @@ extends Node2D
 @onready var boss: CharacterBody2D = %Boss
 const SHOCK_WAVE = preload("res://scene/shock_wave.tscn")
 
-
-
 func _ready() -> void:
 	global_position.y = boss.global_position.y
 	

@@ -140,8 +140,8 @@ sources/0 = SubResource("TileSetAtlasSource_dbls1")
 
 [node name="Game" type="Node2D"]
 scale = Vector2(4, 4)
-metadata/_edit_vertical_guides_ = [1036.0, 2357.0, -643.0, 1561.0, 904.0, 919.0, -90.0, -402.0, 293.0, 885.0]
-metadata/_edit_horizontal_guides_ = [-325.0, 768.0, 512.0, 721.0]
+metadata/_edit_vertical_guides_ = [1036.0, 2357.0, -643.0, 1561.0, 904.0, 919.0, -90.0, -402.0, 293.0, 885.0, -123.0, -727.0]
+metadata/_edit_horizontal_guides_ = [-325.0, 765.0, 512.0, 721.0]
 
 [node name="Maps" type="Node2D" parent="."]
 

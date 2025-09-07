@@ -50,21 +50,21 @@ func change_state(newState):
 	isStateNew = true
 
 # 更改角色方向
-func turn_direction(direction):
+func turn_direction():
 	if direction < 0:
-		animated_sprite.flip_h = true
-		attack_1.scale.x = -1
-		attack_2.scale.x = -1
-		attack_up.scale.x = -1
-		attack_down.scale.x = -1
+		animated_sprite.scale.x = -1.0
+		attack_1.scale.x = -1.0
+		attack_2.scale.x = -1.0
+		attack_up.scale.x = -1.0
+		attack_down.scale.x = -1.0
 	elif direction > 0:
-		animated_sprite.flip_h = false
-		attack_1.scale.x = 1
-		attack_2.scale.x = 1
-		attack_up.scale.x = 1
-		attack_down.scale.x = 1
+		animated_sprite.scale.x = 1.0
+		attack_1.scale.x = 1.0
+		attack_2.scale.x = 1.0
+		attack_up.scale.x = 1.0
+		attack_down.scale.x = 1.0
 		
-func update_animation(direction):
+func update_animation():
 	animated_sprite.offset.x = 0
 	# 更新动画
 	if !is_on_floor():
@@ -79,10 +79,11 @@ func update_animation(direction):
 		animated_sprite.play("run")
 	else:
 		animated_sprite.play("idle")
-	turn_direction(direction)
+	turn_direction()
 	
 func process_normal(delta: float) -> void:
 	direction = Input.get_axis("left", "right")
+	update_animation()
 	# Add the gravity.
 	if not is_on_floor():
 		velocity += get_gravity() * delta * 2.0
@@ -112,17 +113,14 @@ func process_normal(delta: float) -> void:
 		call_deferred("change_state", State.ATTACK_UP)
 	if Input.is_action_just_pressed("attack") and Input.get_action_strength("down") and !is_on_floor() and attack_timer.is_stopped():
 		call_deferred("change_state", State.ATTACK_DOWN)
-	update_animation(direction)
 
 func process_dash(delta):
 	var has_black_dash = black_dash.has_black_dash
 	if isStateNew:
-		if animated_sprite.flip_h:
+		if animated_sprite.scale.x == -1.0:
 			animated_sprite.offset.x = 16
-			direction = -1.0
 		else:
 			animated_sprite.offset.x = -16
-			direction = 1.0
 		if has_black_dash:
 			hurtbox.get_node("CollisionShape2D").disabled = true
 			black_dash.spawn_blackdash()
@@ -202,7 +200,10 @@ func process_hurt(_delta) -> void:
 		wudi()
 		velocity.x = -300 if hurt_direction == 1 else 300
 		velocity.y = -300
-		turn_direction(hurt_direction)
+		if hurt_direction < 0:
+			animated_sprite.scale.x = -1.0
+		elif hurt_direction > 0:
+			animated_sprite.scale.x = 1.0
 		animated_sprite.play("hurt")
 	if !animated_sprite.is_playing():
 		call_deferred("change_state", State.NORMAL)
@@ -230,16 +231,14 @@ func _on_hurtbox_area_entered(area: Area2D) -> void:
 	call_deferred("change_state", State.HURT)
 
 func _on_attack_1_area_entered(_area: Area2D) -> void:
-	print("攻击1")
-	if attack_1.scale.x == 1:
+	if animated_sprite.scale.x == 1.0:
 		global_position.x -= 10
 	else:
 		global_position.x += 10
 
 
 func _on_attack_2_area_entered(_area: Area2D) -> void:
-	print("攻击2")
-	if attack_1.scale.x == 1:
+	if animated_sprite.scale.x == 1.0:
 		global_position.x -= 10
 	else:
 		global_position.x += 10

@@ -1,7 +1,6 @@
 extends Camera2D
 
 var player_position = Vector2.ZERO
-# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	global_position.x = 1560
 	global_position.y = 420
@@ -12,7 +11,6 @@ func match_player_position():
 		var player = players[0]
 		player_position = player.global_position
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	match_player_position()
 	global_position.y = player_position.y - 350

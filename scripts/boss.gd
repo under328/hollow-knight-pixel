@@ -3,7 +3,7 @@ extends CharacterBody2D
 # 定义状态机
 enum State{READY, IDLE, SLASH, SLASH_PLAN, PICK_UP, PICK_UP_PLAN,
  RUN, JUMP_UP, JUMP_DOWN, JUMP2, PUNCH_PLAN, PUNCH, PUNCH_END, 
-BACK_JUMP_UP, BACK_JUMP_DOWN, SHOCK_WAVE}
+BACK_JUMP_UP, BACK_JUMP_DOWN, SHOCK_WAVE, DASH_PLAN, DASH, DASH_END}
 # 当前状态
 var currentState = State.READY
 
@@ -15,6 +15,7 @@ var currentState = State.READY
 @onready var player: CharacterBody2D = %Player
 @onready var guci_spawner: Node2D = %GuciSpawner
 @onready var wave_spawner: Node2D = %WaveSpawner
+@onready var dash_box: Hitbox = $DashBox
 
 const SPEED = 560
 const JUMP_VELOCITY = -720.0
@@ -54,8 +55,12 @@ func _process(delta):
 			process_back_jump_down(delta)
 		State.SHOCK_WAVE:
 			process_shock_wave(delta)
-			
-			
+		State.DASH_PLAN:
+			process_dash_plan(delta)
+		State.DASH:
+			process_dash(delta)
+		State.DASH_END:
+			process_dash_end(delta)
 	isStateNew = false
 
 # 更改状态
@@ -66,13 +71,15 @@ func change_state(newState):
 # 更改角色方向
 func turn_direction():
 	if global_position.x < player.global_position.x:
-		animated_sprite.flip_h = true
-		slash_box.scale.x = 1
-		pick_up_box.scale.x = 1
+		animated_sprite.scale.x = 1.0
+		slash_box.scale.x = 1.0
+		pick_up_box.scale.x = 1.0
+		dash_box.scale.x = 1.0
 	else:
-		animated_sprite.flip_h = false
-		slash_box.scale.x = -1
-		pick_up_box.scale.x = -1
+		animated_sprite.scale.x = -1.0
+		slash_box.scale.x = -1.0
+		pick_up_box.scale.x = -1.0
+		dash_box.scale.x = -1.0
 
 func process_ready(_delta: float) -> void:
 	animated_sprite.play("idel")
@@ -85,7 +92,7 @@ func process_idle(_delta: float) -> void:
 	if isStateNew:
 		animated_sprite.play("idel")
 	if !animated_sprite.is_playing():
-		if randf() > 0.3:
+		if randf() > 0.3: # 0.3
 			if abs(player.global_position.x - global_position.x) < 320:
 				call_deferred("change_state", State.SLASH_PLAN)
 			else:
@@ -94,7 +101,7 @@ func process_idle(_delta: float) -> void:
 				else:
 					call_deferred("change_state", State.JUMP_UP)
 		else:
-			if randf() > 0.5:
+			if randf() > 0.5: # 0.5
 				call_deferred("change_state", State.JUMP2)
 			else:
 				call_deferred("change_state", State.BACK_JUMP_UP)
@@ -108,7 +115,7 @@ func process_slash_plan(_delta: float) -> void:
 		
 func process_slash(_delta: float) -> void:
 	if isStateNew:
-		if slash_box.scale.x == 1:
+		if slash_box.scale.x == 1.0:
 			velocity.x = SPEED * 2
 		else:
 			velocity.x = -SPEED * 2
@@ -129,7 +136,7 @@ func process_pick_up_plan(_delta: float) -> void:
 				
 func process_pick_up(_delta: float) -> void:
 	if isStateNew:
-		if slash_box.scale.x == 1:
+		if slash_box.scale.x == 1.0:
 			velocity.x = 160
 		else:
 			velocity.x = -160
@@ -173,32 +180,35 @@ func process_back_jump_up(_delta: float) -> void:
 		else:
 			velocity.x = (890 - global_position.x) /0.8
 		velocity.y = JUMP_VELOCITY
-		if velocity.x < 0 and animated_sprite.flip_h == true:
-			animated_sprite.play("jump_up")
-		elif velocity.x < 0 and animated_sprite.flip_h == false:
+		if velocity.x < 0 and animated_sprite.scale.x == 1.0:
 			animated_sprite.play("back_jump_up")
-		elif velocity.x > 0 and animated_sprite.flip_h == true:
-			animated_sprite.play("back_jump_up")
-		elif velocity.x > 0 and animated_sprite.flip_h == false:
+		elif velocity.x < 0 and animated_sprite.scale.x == -1.0:
 			animated_sprite.play("jump_up")
+		elif velocity.x > 0 and animated_sprite.scale.x == 1.0:
+			animated_sprite.play("jump_up")
+		elif velocity.x > 0 and animated_sprite.scale.x == -1.0:
+			animated_sprite.play("back_jump_up")
 	if velocity.y > 0:
 		call_deferred("change_state", State.BACK_JUMP_DOWN)
 
 func process_back_jump_down(_delta: float) -> void:
 	if isStateNew:
-		if velocity.x < 0 and animated_sprite.flip_h == true:
-			animated_sprite.play("jump_down")
-		elif velocity.x < 0 and animated_sprite.flip_h == false:
+		if velocity.x < 0 and animated_sprite.scale.x == 1.0:
 			animated_sprite.play("back_jump_down")
-		elif velocity.x > 0 and animated_sprite.flip_h == true:
-			animated_sprite.play("back_jump_down")
-		elif velocity.x > 0 and animated_sprite.flip_h == false:
+		elif velocity.x < 0 and animated_sprite.scale.x == -1.0:
 			animated_sprite.play("jump_down")
+		elif velocity.x > 0 and animated_sprite.scale.x == 1.0:
+			animated_sprite.play("jump_down")
+		elif velocity.x > 0 and animated_sprite.scale.x == -1.0:
+			animated_sprite.play("back_jump_down")
 	if is_on_floor():
 		velocity.x = 0
-		call_deferred("change_state", State.SHOCK_WAVE)
-		await get_tree().create_timer(0.3).timeout
-		spawner_wave()
+		if randf() > 0.5: # 0.5
+			call_deferred("change_state", State.SHOCK_WAVE)
+			await get_tree().create_timer(0.3).timeout
+			spawner_wave()
+		else:
+			call_deferred("change_state", State.DASH_PLAN)
 
 func spawner_wave():
 	if global_position.x > 300.0:
@@ -243,6 +253,35 @@ func process_shock_wave(_delta: float) -> void:
 	if isStateNew:
 		velocity = Vector2.ZERO
 		animated_sprite.play("shock_wave")
+	if !animated_sprite.is_playing():
+		call_deferred("change_state", State.IDLE)
+
+func process_dash_plan(_delta: float) -> void:
+	if isStateNew:
+		animated_sprite.play("dash_plan")
+	if !animated_sprite.is_playing():
+		call_deferred("change_state", State.DASH)
+		
+func process_dash(_delta: float) -> void:
+	if isStateNew:
+		if animated_sprite.scale.x == -1.0:
+			print("L")
+			velocity.x = -1000
+		elif animated_sprite.scale.x == 1.0:
+			print("R")
+			velocity.x = 1000
+		velocity.y = 0
+		animated_sprite.play("dash")
+		print(position.x)
+	if animated_sprite.scale.x == -1.0 and position.x < -100:
+		call_deferred("change_state", State.DASH_END)
+	if animated_sprite.scale.x == 1.0 and position.x > 228: #890
+		call_deferred("change_state", State.DASH_END)
+		
+func process_dash_end(delta: float) -> void:
+	if isStateNew:
+		velocity.x = lerp(0.0, velocity.x, pow(2, -10 * delta))
+		animated_sprite.play("dash_end")
 	if !animated_sprite.is_playing():
 		call_deferred("change_state", State.IDLE)
 
